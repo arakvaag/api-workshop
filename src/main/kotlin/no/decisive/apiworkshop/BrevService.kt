@@ -27,27 +27,19 @@ class BrevService(
 
     fun endreDataIBrev(brevid: Long, brevendringer: Brevendringer, forventetVersion: Int) {
         val brev = brevRepository.hentBrevPaaId(brevid)
-        if (forventetVersion != brev.version) {
-            throw OptimistiskLaasingFeiletException("Forventet version var $forventetVersion, mens version i DB var ${brev.version}")
-        }
-        brev.endreData(brevendringer)
+        brev.endreData(endringer = brevendringer, forventetVersion = forventetVersion)
         brevRepository.lagre(brev)
     }
 
     fun sendBrev(brevid: Long, forventetVersion: Int) {
         val brev = brevRepository.hentBrevPaaId(brevid)
-        if (forventetVersion != brev.version) {
-            throw OptimistiskLaasingFeiletException("Forventet version var $forventetVersion, mens version i DB var ${brev.version}")
-        }
-        brev.send()
+        brev.send(forventetVersion = forventetVersion)
         brevRepository.lagre(brev)
     }
 
     fun soekEtterBrevPaaFodselsnummer(foedselsnummer: String): List<Brev> {
         return brevRepository.soekPaaFoedselsnummer(foedselsnummer)
     }
-
-    class OptimistiskLaasingFeiletException(melding: String) : RuntimeException(melding)
 
     data class OpprettBrevRequest(
         val foedselsnummer: String,

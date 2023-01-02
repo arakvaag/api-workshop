@@ -39,7 +39,14 @@ class Brev {
     var datoSendt: LocalDateTime?
         private set
 
-    fun endreData(endringer: BrevService.Brevendringer) {
+    fun endreData(endringer: BrevService.Brevendringer, forventetVersion: Int) {
+        check(status == Status.GJOERES_KLAR_FOR_SENDING) {
+            """Kun brev med status ${Status.GJOERES_KLAR_FOR_SENDING} kan endres. Dette brevet har status ${status.name}."""
+        }
+        if (forventetVersion != version) {
+            throw OptimistiskLaasingFeiletException("Forventet version var $forventetVersion, mens faktisk version var $version.")
+        }
+
         if (endringer.harNyVerdiForTittel) {
             tittel = endringer.nyVerdiForTittel
         }
@@ -49,10 +56,14 @@ class Brev {
         version++
     }
 
-    fun send() {
+    fun send(forventetVersion: Int) {
         check(status == Status.GJOERES_KLAR_FOR_SENDING) {
-            "Egenandel med id $id har ikke status ${Status.GJOERES_KLAR_FOR_SENDING.name} og kan derfor ikke sendes"
+            """Kun brev med status ${Status.GJOERES_KLAR_FOR_SENDING} kan endres. Dette brevet har status ${status.name}."""
         }
+        if (forventetVersion != version) {
+            throw OptimistiskLaasingFeiletException("Forventet version var $forventetVersion, mens faktisk version var $version.")
+        }
+
         status = Status.SENDT
         datoSendt = LocalDateTime.now()
         version++
@@ -76,6 +87,7 @@ class Brev {
     fun eksporterState(): State {
         return State(foedselsnummer, id, version, status, tittel, broedtekst, datoSendt)
     }
+
     data class State(
         val foedselsnummer: String,
         val id: Long,
@@ -85,4 +97,7 @@ class Brev {
         val broedtekst: String?,
         val datoSendt: LocalDateTime?
     )
+
+    class OptimistiskLaasingFeiletException(melding: String) : RuntimeException(melding)
+
 }

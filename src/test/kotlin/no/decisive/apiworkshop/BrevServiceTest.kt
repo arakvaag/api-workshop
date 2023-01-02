@@ -1,6 +1,7 @@
 package no.decisive.apiworkshop
 
-import no.decisive.apiworkshop.BrevService.*
+import no.decisive.apiworkshop.BrevService.Brevendringer
+import no.decisive.apiworkshop.BrevService.OpprettBrevRequest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -180,7 +181,7 @@ class BrevServiceTest : SpringTestParent() {
             )
         )
 
-        assertThrows(OptimistiskLaasingFeiletException::class.java) {
+        assertThrows(Brev.OptimistiskLaasingFeiletException::class.java) {
             brevService.endreDataIBrev(
                 brevid = nyopprettetBrev.id,
                 brevendringer = Brevendringer().medNyTittel("den nye tittelen"),

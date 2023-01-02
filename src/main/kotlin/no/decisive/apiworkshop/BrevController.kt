@@ -1,5 +1,6 @@
 package no.decisive.apiworkshop
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -8,10 +9,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(
-    path = ["/api/brev"],
+    path = ["/brev"],
     produces = [MediaType.APPLICATION_JSON_VALUE]
 )
-class BrevController {
+class BrevController(
+    private val objectMapper: ObjectMapper,
+    private val brevService: BrevService
+) {
 
     @GetMapping("/ping")
     fun ping(): ResponseEntity<String> {
