@@ -4,13 +4,13 @@ import java.time.LocalDateTime
 
 class Brev {
 
-    constructor(idProvider: IdProvider, fodselsnummer: String, tittel: String?, brodtekst: String?) {
+    constructor(idProvider: IdProvider, foedselsnummer: String, tittel: String?, broedtekst: String?) {
         this.id = idProvider.hentNyBrevid()
         this.version = 1
-        this.status = Status.GJORES_KLAR_FOR_SENDING
-        this.fodselsnummer = fodselsnummer
+        this.status = Status.GJOERES_KLAR_FOR_SENDING
+        this.foedselsnummer = foedselsnummer
         this.tittel = tittel
-        this.brodtekst = brodtekst
+        this.broedtekst = broedtekst
         this.datoSendt = null
     }
 
@@ -18,24 +18,23 @@ class Brev {
         this.id = state.id
         this.version = state.version
         this.status = state.status
-        this.fodselsnummer = state.fodselsnummer
+        this.foedselsnummer = state.foedselsnummer
         this.tittel = state.tittel
-        this.brodtekst = state.brodtekst
+        this.broedtekst = state.broedtekst
         this.datoSendt = state.datoSendt
     }
 
-    @Suppress("unused")
-    enum class Status { GJORES_KLAR_FOR_SENDING, SENDT }
+    enum class Status { GJOERES_KLAR_FOR_SENDING, SENDT }
 
     val id: Long
     var version: Int
         private set
     var status: Status
         private set
-    val fodselsnummer: String
+    val foedselsnummer: String
     var tittel: String?
         private set
-    var brodtekst: String?
+    var broedtekst: String?
         private set
     var datoSendt: LocalDateTime?
         private set
@@ -44,15 +43,15 @@ class Brev {
         if (endringer.harNyVerdiForTittel) {
             tittel = endringer.nyVerdiForTittel
         }
-        if (endringer.harNyVerdiForBrodtekst) {
-            brodtekst = endringer.nyVerdiForBrodtekst
+        if (endringer.harNyVerdiForBroedtekst) {
+            broedtekst = endringer.nyVerdiForBroedtekst
         }
         version++
     }
 
     fun send() {
-        check(status == Status.GJORES_KLAR_FOR_SENDING) {
-            "Egenandel med id $id har ikke status ${Status.GJORES_KLAR_FOR_SENDING.name} og kan derfor ikke sendes"
+        check(status == Status.GJOERES_KLAR_FOR_SENDING) {
+            "Egenandel med id $id har ikke status ${Status.GJOERES_KLAR_FOR_SENDING.name} og kan derfor ikke sendes"
         }
         status = Status.SENDT
         datoSendt = LocalDateTime.now()
@@ -75,15 +74,15 @@ class Brev {
     }
 
     fun eksporterState(): State {
-        return State(fodselsnummer, id, version, status, tittel, brodtekst, datoSendt)
+        return State(foedselsnummer, id, version, status, tittel, broedtekst, datoSendt)
     }
     data class State(
-        val fodselsnummer: String,
+        val foedselsnummer: String,
         val id: Long,
         val version: Int,
         val status: Status,
         val tittel: String?,
-        val brodtekst: String?,
+        val broedtekst: String?,
         val datoSendt: LocalDateTime?
     )
 }

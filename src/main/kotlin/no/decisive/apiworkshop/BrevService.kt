@@ -11,9 +11,9 @@ class BrevService(
     fun opprettBrev(opprettBrevRequest: OpprettBrevRequest): Brev {
         val brev = Brev(
             idProvider,
-            opprettBrevRequest.fodselsnummer,
+            opprettBrevRequest.foedselsnummer,
             opprettBrevRequest.tittel,
-            opprettBrevRequest.brodtekst
+            opprettBrevRequest.broedtekst
         )
 
         brevRepository.lagre(brev)
@@ -43,27 +43,27 @@ class BrevService(
         brevRepository.lagre(brev)
     }
 
-    fun soekEtterBrevPaaFodselsnummer(fodselsnummer: String): List<Brev> {
-        return brevRepository.soekPaaFodselsnummer(fodselsnummer)
+    fun soekEtterBrevPaaFodselsnummer(foedselsnummer: String): List<Brev> {
+        return brevRepository.soekPaaFoedselsnummer(foedselsnummer)
     }
 
     class OptimistiskLaasingFeiletException(melding: String) : RuntimeException(melding)
 
     data class OpprettBrevRequest(
-        val fodselsnummer: String,
+        val foedselsnummer: String,
         val tittel: String?,
-        val brodtekst: String?
+        val broedtekst: String?
     )
 
     class Brevendringer {
         var nyVerdiForTittel: String? = null
             private set
-        var nyVerdiForBrodtekst: String? = null
+        var nyVerdiForBroedtekst: String? = null
             private set
 
         var harNyVerdiForTittel: Boolean = false
             private set
-        var harNyVerdiForBrodtekst: Boolean = false
+        var harNyVerdiForBroedtekst: Boolean = false
             private set
 
         fun medNyTittel(nyTittel: String): Brevendringer {
@@ -72,9 +72,9 @@ class BrevService(
             return this
         }
 
-        fun medNyBrotekst(nyBrodtekst: String): Brevendringer {
-            harNyVerdiForBrodtekst = true
-            nyVerdiForBrodtekst = nyBrodtekst
+        fun medNyBroedtekst(nyBroedtekst: String): Brevendringer {
+            harNyVerdiForBroedtekst = true
+            nyVerdiForBroedtekst = nyBroedtekst
             return this
         }
     }

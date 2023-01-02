@@ -11,8 +11,8 @@ class BrevRepository {
         lagredeBrev[brev.id] = brev.eksporterState()
     }
 
-    fun soekPaaFodselsnummer(fodselsnummer: String): List<Brev> {
-        return lagredeBrev.values.filter { it.fodselsnummer == fodselsnummer }.map { Brev(it) }
+    fun soekPaaFoedselsnummer(fodselsnummer: String): List<Brev> {
+        return lagredeBrev.values.filter { it.foedselsnummer == fodselsnummer }.map { Brev(it) }
     }
 
     fun slettAlt() {
