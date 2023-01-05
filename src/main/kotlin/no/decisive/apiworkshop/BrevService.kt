@@ -26,6 +26,9 @@ class BrevService(
     }
 
     fun endreDataIBrev(brevid: Long, brevendringer: Brevendringer, forventetVersion: Int) {
+        require(brevendringer.harNyVerdiForTittel || brevendringer.harNyVerdiForBroedtekst) {
+            "Ingen endringer spesifisert"
+        }
         val brev = brevRepository.hentBrevPaaId(brevid)
         brev.endreData(endringer = brevendringer, forventetVersion = forventetVersion)
         brevRepository.lagre(brev)

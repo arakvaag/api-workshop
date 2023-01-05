@@ -191,6 +191,25 @@ class BrevServiceTest : SpringTestParent() {
     }
 
     @Test
+    fun `proeve aa kjoere endre-kall uten aa oppgi noen endringer`() {
+        val nyopprettetBrev = brevService.opprettBrev(
+            OpprettBrevRequest(
+                foedselsnummer = "11223312345",
+                tittel = "tittelen",
+                broedtekst = "brødteksten"
+            )
+        )
+
+        assertThrows(IllegalArgumentException::class.java) {
+            brevService.endreDataIBrev(
+                brevid = nyopprettetBrev.id,
+                brevendringer = Brevendringer(),
+                forventetVersion = nyopprettetBrev.version
+            )
+        }
+    }
+
+    @Test
     fun `soeke etter brev paa foedselsnummer`() {
         val foedselsnummer = "11223312345"
         val tittelBrev2 = "tittelen 2"
